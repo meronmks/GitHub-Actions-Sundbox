@@ -1,0 +1,14 @@
+name: release
+
+on:
+    push:
+        tags:
+            - 'v*'
+jobs:
+    convert:
+        runs-on: ubuntu-latest
+    steps:
+        - name: Zip output
+        run: |
+            REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
+            zip -r ${{ $REPOSITORY }}.zip ./ -x "*.git*" "*output*" "*.gitignore*"
