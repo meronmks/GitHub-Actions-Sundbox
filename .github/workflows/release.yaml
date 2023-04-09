@@ -2,13 +2,13 @@ name: release
 
 on:
     push:
-        tags:
-            - 'v*'
+      branches-ignore:
+        - '**'
+      tags:
+        - 'v*'
+  
 jobs:
-    convert:
+    build:
         runs-on: ubuntu-latest
-    steps:
-        - name: Zip output
-        run: |
-            REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
-            zip -r ${{ $REPOSITORY }}.zip ./ -x "*.git*" "*output*" "*.gitignore*"
+        steps:
+        - run: zip -r GitHubActionSundbox.zip ./ -x "*.git*" "*output*" "*.gitignore*"
