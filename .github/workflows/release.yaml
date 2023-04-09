@@ -3,12 +3,28 @@ name: release
 on:
     push:
       branches-ignore:
-        - '**'
+      - '**'
       tags:
-        - 'v*'
+      - 'v*'
   
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-        - run: zip -r GitHubActionSundbox.zip ./ -x "*.git*" "*output*" "*.gitignore*"
+          - name: Set version
+            id: version
+            run: |
+                REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
+                VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+                echo ::set-output name=version::$VERSION
+                echo ::set-output name=filename::$REPOSITORY-$VERSION
+                echo "Version $VERSION"                
+          - name: Checkout code
+            uses: actions/checkout@v2
+            with:
+                token: ${{ secrets.GITHUB_TOKEN }}
+          - name: Archive
+            run: |
+                zip -r ${{ steps.version.outputs.filename }}.zip ./ -x "*.git*"
+
+         
